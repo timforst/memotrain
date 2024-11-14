@@ -8,7 +8,7 @@ let timeAtStart;
 let startTime;
 let stopTime;
 let timePerLP;
-let numberOfPairs = 10;
+let numberOfPairs = 23;
 let runningIndex = 0;
 let helpActive = false;
 let currentFirstLetter = 'Z'

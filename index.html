@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memotrain</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="start-page" style=" display: block;">
+        <h1>Memotrain</h1>
+        <div class="center">
+            <button onclick="startTraining()">Start Training</button>
+        </div>
+    </div>
+    <div id="training-page" style="display: none;">
+        <div class="letter-pair">
+            <p id="letter-pair"></p>
+        </div>
+        <div class="button-container" id="initial-buttons">
+            <button onclick="good()">Good</button>
+            <button onclick="bad()">Bad</button>
+        </div>
+    </div>
+    <div id="results-page" style=" display: none;">
+        <div class="letter-pair">
+            <p id="results-text"></p>
+        </div>
+        <div class="letter-pair">
+            <p id="time-per-letter-pair"></p>
+        </div>
+
+        <ul id="results-list"></ul>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+    

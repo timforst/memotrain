@@ -1,0 +1,80 @@
+button {
+    padding: 5px 10px;
+    font-size: 32px;
+    color: white;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+ul {
+    list-style-type: none; /* Remove default list bullets */
+    padding: 0;
+    margin: 0;
+}
+
+li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f9f9f9; /* Light background color */
+    border: 1px solid #ddd;  /* Light border */
+    border-radius: 8px; /* Rounded corners */
+    padding: 10px 100px;
+    margin-bottom: 10px; /* Space between list items */
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
+}
+
+li:hover {
+    background-color: #f0f0f0; /* Slightly darker on hover */
+    transform: scale(1.02); /* Slight zoom effect */
+}
+
+.button-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    max-width: 600px;
+    padding-top: 40px;
+    margin: auto;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 32px;
+    color: #black;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+}
+
+#letter-pair {
+    font-size: 48px;
+}
+
+#results-list {
+    width: 50%;
+    margin: 0 auto;
+}
+
+#results-text {
+    font-size: 48px;
+}
+
+#time-per-letter-pair {
+    font-size: 48px;
+}
+
+.letter-pair {
+    text-align: center;
+    margin: auto; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

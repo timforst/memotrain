@@ -16,6 +16,23 @@ let currentSecondLetter = 'Z'
 const memoPairs = [];
 const letters = ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'];
 
+function toggleDarkMode() {
+    const body = document.body;
+    body.classList.toggle("dark-mode");
+    if (body.classList.contains("dark-mode")) {
+        localStorage.setItem("theme", "dark");
+    } else {
+        localStorage.setItem("theme", "light");
+    }
+}
+
+window.addEventListener("load", () => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "dark") {
+        document.body.classList.add("dark-mode");
+    }
+});
+
 document.addEventListener('keydown', event => {
     if (event.code === 'Space') {
         if (numTotal >= 0 && numTotal < numberOfPairs) {
@@ -45,6 +62,9 @@ document.addEventListener('keydown', event => {
         } else {
             help();
         }
+    }
+    if (event.code === 'KeyD') {
+        toggleDarkMode();
     }
 })
 

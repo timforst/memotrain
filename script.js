@@ -1,6 +1,6 @@
 let times = [];
+let targets = [];
 let letterPairs = [];
-let resultsList = [];
 let goodBad = [];
 let numGood = -1;
 let numTotal = -1;
@@ -10,6 +10,7 @@ let stopTime;
 let timePerLP;
 let numberOfPairs = 10;
 let runningIndex = 0;
+let helpActive = false;
 let currentFirstLetter = 'Z'
 let currentSecondLetter = 'Z'
 const memoPairs = [];
@@ -19,19 +20,51 @@ document.addEventListener('keydown', event => {
     if (event.code === 'Space') {
         if (numTotal >= 0 && numTotal < numberOfPairs) {
             good();
-        } else if (numTotal == -1) {
+        }
+    }
+    if (event.code === 'Enter') {
+        if (numTotal == -1 && !helpActive) {
             startTraining();
         }
     }
     if (event.code === 'KeyN') {
         if (numTotal >= 0 && numTotal < numberOfPairs) {
             bad();
-        } else if (numTotal == numberOfPairs) {
-        document.getElementById('results-page').style.display = 'none';
-            startTraining();
+        }
+    }
+    if (event.code === 'KeyK') {
+        if (numTotal == numberOfPairs) {
+            goBack();
+        } else if (helpActive) {
+            closeHelp();
+        }
+    }
+    if (event.code === 'KeyH') {
+        if (helpActive) {
+            closeHelp();
+        } else {
+            help();
         }
     }
 })
+
+function goBack() {
+    document.getElementById('results-page').style.display = 'none';
+    document.getElementById('start-page').style.display = 'block';
+    numTotal = -1;
+}
+
+function help() {
+    document.getElementById('start-page').style.display = 'none';
+    document.getElementById('help-page').style.display = 'block';
+    helpActive = true;
+}
+    
+function closeHelp() {
+    document.getElementById('help-page').style.display = 'none';
+    document.getElementById('start-page').style.display = 'block';
+    helpActive = false;
+}
 
 function randIndex(list) {
     let index = Math.floor(Math.random()*list.length);
@@ -52,12 +85,14 @@ function genRandomNumbers(numberOfPairs) {
     return targets;
 }
 
-let targets = genRandomNumbers(numberOfPairs);
 
 function startTraining() {
-    runningIndex=0;
-    numGood=0;
-    numTotal=0
+    targets = genRandomNumbers(numberOfPairs);
+    runningIndex = 0;
+    numGood = 0;
+    numTotal = 0;
+    goodBad = [];
+    times = []
     document.getElementById('start-page').style.display = 'none';
     document.getElementById('training-page').style.display = 'block';
     currentFirstLetter = letters[targets[runningIndex]];

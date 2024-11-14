@@ -27,10 +27,19 @@ function toggleDarkMode() {
 }
 
 window.addEventListener("load", () => {
-    const savedTheme = localStorage.getItem("theme");
-    if (savedTheme === "dark") {
-        document.body.classList.add("dark-mode");
-    }
+  const userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  
+  if (userPrefersDark) {
+    document.body.classList.add("dark-mode");
+  } else {
+    document.body.classList.remove("dark-mode");
+  }
+
+  // Save the preference if user toggles it
+  const savedTheme = localStorage.getItem("theme");
+  if (savedTheme === "dark") {
+    document.body.classList.add("dark-mode");
+  }
 });
 
 document.addEventListener('keydown', event => {

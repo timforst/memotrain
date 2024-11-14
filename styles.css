@@ -32,8 +32,8 @@ li {
     background-color: #f9f9f9; /* Light background color */
     border: 1px solid #ddd;  /* Light border */
     border-radius: 8px; /* Rounded corners */
-    padding: 10px 100px;
-    margin-bottom: 10px; /* Space between list items */
+    padding: 10px 10vw;
+    margin-bottom: 10px;
     transition: background-color 0.3s, transform 0.2s; /* Smooth transitions */
 }
 

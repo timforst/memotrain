@@ -9,10 +9,26 @@
 <body>
     <div id="start-page" style=" display: block;">
         <button id="help-button" onclick="help()">?</button>
-        <button id="darkmode-button" onclick="toggleDarkMode()">🌙</button>
+        <button id="settings-button" onclick="settings()">⚙︎</button>
         <h1>Memo Trainer</h1>
         <div class="center">
             <button onclick="startTraining()">Start Training</button>
+        </div>
+    </div>
+    <div class="settings-container" id="settings-page" style=" display: none;">
+        <h1>Settings</h1>
+        <ul class="settings-list">
+            <li>
+                <span>Dark Mode</span>
+                <button id="darkmode-button" onclick="toggleDarkMode()">Off</button>
+            </li>
+            <li>
+                <span>Timeout</span>
+                <button id="timeout-button" onclick="toggleTimeOut()">Off</button>
+            </li>
+        </ul>
+        <div class="center">
+            <button onclick="closeSettings()">Close</button>
         </div>
     </div>
     <div id="help-page" style=" display: none;">

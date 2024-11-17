@@ -97,7 +97,29 @@ kbd {
     color: white;
 }
 
+.settings-container {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.settings-list li {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 10px 0;
+    background-color: transparent;
+}
+
+#timeout-button {
+    width: 10vw;
+}
+
 #darkmode-button {
+    width: 10vw;
+}
+
+#settings-button {
     position: absolute;
     top: 20px;
     right: 20px;
@@ -106,7 +128,7 @@ kbd {
     padding: 20px 20px;
     background-color: #007BFF;
     cursor: pointer;
-    color: white;
+    /* color: white; */
     z-index:1000;
 }
 

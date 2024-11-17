@@ -4,6 +4,7 @@ let letterPairs = [];
 let goodBad = [];
 let numGood = -1;
 let numTotal = -1;
+let timeOut = 5;
 let timeAtStart;
 let startTime;
 let stopTime;
@@ -11,6 +12,7 @@ let timePerLP;
 let numberOfPairs = 23;
 let runningIndex = 0;
 let helpActive = false;
+let settingsActive = false;
 let currentFirstLetter = 'Z'
 let currentSecondLetter = 'Z'
 const memoPairs = [];
@@ -21,8 +23,26 @@ function toggleDarkMode() {
     body.classList.toggle("dark-mode");
     if (body.classList.contains("dark-mode")) {
         localStorage.setItem("theme", "dark");
+        document.getElementById("darkmode-button").textContent = `On`;
     } else {
         localStorage.setItem("theme", "light");
+        document.getElementById("darkmode-button").textContent = `Off`;
+    }
+}
+
+function toggleTimeOut() {
+    if (timeOut == 0) {
+        timeOut = 3;
+        document.getElementById("timeout-button").textContent = `3`;
+    } else if (timeOut == 3 ) {
+        timeOut = 5;
+        document.getElementById("timeout-button").textContent = `5`;
+    } else if (timeOut == 5 ) {
+        timeOut = 10;
+        document.getElementById("timeout-button").textContent = `10`;
+    } else if (timeOut == 10 ) {
+        timeOut = 0;
+        document.getElementById("timeout-button").textContent = `Off`;
     }
 }
 
@@ -31,8 +51,20 @@ window.addEventListener("load", () => {
   
   if (userPrefersDark) {
     document.body.classList.add("dark-mode");
+    toggleDarkMode();
+    toggleDarkMode();
+    toggleTimeOut();
+    toggleTimeOut();
+    toggleTimeOut();
+    toggleTimeOut();
   } else {
     document.body.classList.remove("dark-mode");
+    toggleDarkMode();
+    toggleDarkMode();
+    toggleTimeOut();
+    toggleTimeOut();
+    toggleTimeOut();
+    toggleTimeOut();
   }
 
   // Save the preference if user toggles it
@@ -49,7 +81,7 @@ document.addEventListener('keydown', event => {
         }
     }
     if (event.code === 'Enter') {
-        if (numTotal == -1 && !helpActive) {
+        if (numTotal == -1 && !helpActive && !settingsActive) {
             startTraining();
         }
     }
@@ -63,6 +95,8 @@ document.addEventListener('keydown', event => {
             goBack();
         } else if (helpActive) {
             closeHelp();
+        } else if (settingsActive) {
+            closeSettings();
         }
     }
     if (event.code === 'KeyH') {
@@ -70,6 +104,18 @@ document.addEventListener('keydown', event => {
             closeHelp();
         } else {
             help();
+        }
+    }
+    if (event.code === 'KeyS') {
+        if (settingsActive) {
+            closeSettings();
+        } else {
+            settings();
+        }
+    }
+    if (event.code === 'KeyT') {
+        if (settingsActive) {
+            toggleTimeOut();
         }
     }
     if (event.code === 'KeyD') {
@@ -94,6 +140,19 @@ function closeHelp() {
     document.getElementById('start-page').style.display = 'block';
     helpActive = false;
 }
+
+function settings() {
+    document.getElementById('start-page').style.display = 'none';
+    document.getElementById('settings-page').style.display = 'block';
+    settingsActive = true;
+}
+    
+function closeSettings() {
+    document.getElementById('settings-page').style.display = 'none';
+    document.getElementById('start-page').style.display = 'block';
+    settingsActive = false;
+}
+
 
 function randIndex(list) {
     let index = Math.floor(Math.random()*list.length);
@@ -134,10 +193,6 @@ function startTraining() {
 }
 
 function updateResults() {
-    document.getElementById("results-text").innerHTML = `${numGood} out of ${numTotal} letter pairs were good.`;
-}
-
-function updateResults() {
     document.getElementById("results-text").innerHTML = `${numGood}/${numTotal}`;
 }
 
@@ -158,11 +213,17 @@ function incrementBad() {
 
 function good() {
     endTime = Date.now();
-    times.push(Math.round((endTime - startTime)/10) / 100);
+    currentTime = Math.round((endTime - startTime)/10) / 100
+    times.push(currentTime);
     startTime = Date.now();
     runningIndex +=2;
-    incrementGood();
-    goodBad.push(true);
+    if (timeOut != 0 && currentTime > timeOut) {
+        incrementBad();
+        goodBad.push(false)
+    } else {
+        incrementGood();
+        goodBad.push(true);
+    }
     if (runningIndex >= 2*numberOfPairs) {
         timePerLP = Math.round((endTime - timeAtStart) / 10 / numberOfPairs)/100;
         updateTimePerLP();

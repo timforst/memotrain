@@ -26,9 +26,34 @@
                 <span>Timeout</span>
                 <button id="timeout-button" onclick="toggleTimeOut()">Off</button>
             </li>
+            <li>
+                <span>Stats</span>
+                <button id="stats-button" onclick="showStats()">Show</button>
+            </li>
         </ul>
         <div class="center">
             <button onclick="closeSettings()">Close</button>
+        </div>
+    </div>
+    <div id="stats-page" style=" display: none;">
+        <h1>Stats</h1>
+        <!-- <ul id="stats-list"></ul> -->
+        <section class="shortcuts" id="stats-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Time per Letterpair</th>
+                        <th>Accuracy</th>
+                        <th>Date</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </section>
+        <div class="center">
+            <button onclick="closeStats()">Close</button>
         </div>
     </div>
     <div id="help-page" style=" display: none;">
@@ -59,6 +84,14 @@
                     <td>Toggle Dark Mode</td>
                   </tr>
                   <tr>
+                    <td><kbd>T</kbd></td>
+                    <td>Adjust Timeout</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>O</kbd></td>
+                    <td>Show Stats</td>
+                  </tr>
+                  <tr>
                     <td><kbd>H</kbd></td>
                     <td>Toggle Help Menu</td>
                   </tr>
@@ -83,6 +116,7 @@
         </div>
     </div>
     <div id="results-page" style=" display: none;">
+        <button id="final-stats-button" onclick="showStats()">Stats</button>
         <button id="back-button" onclick="goBack()">←</button>
         <div class="letter-pair">
             <p id="results-text"></p>

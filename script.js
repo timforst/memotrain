@@ -13,38 +13,24 @@ let numberOfPairs = 23;
 let runningIndex = 0;
 let helpActive = false;
 let settingsActive = false;
+let statsActive = false;
+let statsFromSettings = false;
+let statsFromResults = false;
 let currentFirstLetter = 'Z'
 let currentSecondLetter = 'Z'
 const memoPairs = [];
+let statsPerLP = [];
+let statsDates = [];
+let statsAccuracy = [];
 const letters = ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'];
 
-function toggleDarkMode() {
-    const body = document.body;
-    body.classList.toggle("dark-mode");
-    if (body.classList.contains("dark-mode")) {
-        localStorage.setItem("theme", "dark");
-        document.getElementById("darkmode-button").textContent = `On`;
-    } else {
-        localStorage.setItem("theme", "light");
-        document.getElementById("darkmode-button").textContent = `Off`;
+document.addEventListener('DOMContentLoaded', () => {
+    if (localStorage.getItem('statsPerLP')) {
+        statsPerLP = JSON.parse(localStorage.getItem('statsPerLP'));
+        statsDates = JSON.parse(localStorage.getItem('statsDates'));
+        statsAccuracy = JSON.parse(localStorage.getItem('statsAccuracy'));
     }
-}
-
-function toggleTimeOut() {
-    if (timeOut == 0) {
-        timeOut = 3;
-        document.getElementById("timeout-button").textContent = `3`;
-    } else if (timeOut == 3 ) {
-        timeOut = 5;
-        document.getElementById("timeout-button").textContent = `5`;
-    } else if (timeOut == 5 ) {
-        timeOut = 10;
-        document.getElementById("timeout-button").textContent = `10`;
-    } else if (timeOut == 10 ) {
-        timeOut = 0;
-        document.getElementById("timeout-button").textContent = `Off`;
-    }
-}
+});
 
 window.addEventListener("load", () => {
   const userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
@@ -97,6 +83,8 @@ document.addEventListener('keydown', event => {
             closeHelp();
         } else if (settingsActive) {
             closeSettings();
+        } else if (statsActive) {
+            closeStats();
         }
     }
     if (event.code === 'KeyH') {
@@ -118,10 +106,47 @@ document.addEventListener('keydown', event => {
             toggleTimeOut();
         }
     }
+    if (event.code === 'KeyO') {
+        if (statsActive) {
+            closeStats();
+        } else if (settingsActive) {
+            showStats("settings");
+        } else if ( numTotal == numberOfPairs) {
+            showStats("results");
+        }
+    }
     if (event.code === 'KeyD') {
         toggleDarkMode();
     }
 })
+
+function toggleDarkMode() {
+    const body = document.body;
+    body.classList.toggle("dark-mode");
+    if (body.classList.contains("dark-mode")) {
+        localStorage.setItem("theme", "dark");
+        document.getElementById("darkmode-button").textContent = `On`;
+    } else {
+        localStorage.setItem("theme", "light");
+        document.getElementById("darkmode-button").textContent = `Off`;
+    }
+}
+
+function toggleTimeOut() {
+    if (timeOut == 0) {
+        timeOut = 3;
+        document.getElementById("timeout-button").textContent = `3`;
+    } else if (timeOut == 3 ) {
+        timeOut = 5;
+        document.getElementById("timeout-button").textContent = `5`;
+    } else if (timeOut == 5 ) {
+        timeOut = 10;
+        document.getElementById("timeout-button").textContent = `10`;
+    } else if (timeOut == 10 ) {
+        timeOut = 0;
+        document.getElementById("timeout-button").textContent = `Off`;
+    }
+}
 
 function goBack() {
     document.getElementById('results-page').style.display = 'none';
@@ -225,9 +250,7 @@ function good() {
         goodBad.push(true);
     }
     if (runningIndex >= 2*numberOfPairs) {
-        timePerLP = Math.round((endTime - timeAtStart) / 10 / numberOfPairs)/100;
-        updateTimePerLP();
-        showResults();
+        finishTraining();
     } else {
         currentFirstLetter = letters[targets[runningIndex]];
         currentSecondLetter = letters[targets[runningIndex+1]];
@@ -244,14 +267,81 @@ function bad() {
     incrementBad();
     goodBad.push(false);
     if (runningIndex >= 2*numberOfPairs) {
-        timePerLP = Math.round((endTime - timeAtStart) / 10 / numberOfPairs)/100;
-        updateTimePerLP();
-        showResults();
+        finishTraining();
     } else {
         currentFirstLetter = letters[targets[runningIndex]];
         currentSecondLetter = letters[targets[runningIndex+1]];
         letterPairs.push(currentFirstLetter+currentSecondLetter);
         document.getElementById("letter-pair").innerHTML = currentFirstLetter+currentSecondLetter;
+    }
+}
+
+function finishTraining() {
+    timePerLP = Math.round((endTime - timeAtStart) / 10 / numberOfPairs)/100;
+    updateTimePerLP();
+    showResults();
+    statsPerLP.push(timePerLP);
+    let date = new Date(endTime);
+    statsDates.push(date.toLocaleString());
+    statsAccuracy.push(Math.round(100*numGood/numTotal)/100);
+    localStorage.setItem('statsPerLP', JSON.stringify(statsPerLP));
+    localStorage.setItem('statsDates', JSON.stringify(statsDates));
+    localStorage.setItem('statsAccuracy', JSON.stringify(statsAccuracy));
+}
+
+function showStats(where) {
+    const statsList = document.getElementById('stats-list').querySelector('tbody');
+    statsList.innerHTML = ''; 
+    for (let i = statsPerLP.length-1; i > -1; i--) {
+        const row = document.createElement('tr');
+        const timeCell = document.createElement('td');
+        timeCell.textContent = statsPerLP[i];
+        row.appendChild(timeCell);
+        const accuracyCell = document.createElement('td');
+        accuracyCell.textContent = statsAccuracy[i] * 100 + '%';
+        row.appendChild(accuracyCell);
+        const dateCell = document.createElement('td');
+        dateCell.textContent = statsDates[i];
+        row.appendChild(dateCell);
+        const actionCell = document.createElement('td');
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = '🗑️';  
+        deleteButton.classList.add('delete-button');
+        deleteButton.addEventListener('click', () => {
+            deleteStat(i); 
+            showStats();
+        });
+        actionCell.appendChild(deleteButton);
+        row.appendChild(actionCell);
+        statsList.appendChild(row);
+    }
+    if (where = "stats") {
+        document.getElementById('settings-page').style.display = 'none';
+        document.getElementById('stats-page').style.display = 'block';
+        statsFromSettings = true;
+        settingsActive = false;
+        statsActive = true;
+    } else if (where = "results") {
+        document.getElementById('results-page').style.display = 'none';
+        document.getElementById('stats-page').style.display = 'block';
+        statsFromResults = true;
+        statsActive = true;
+    }
+}
+
+
+function closeStats() {
+    if (statsFromSettings) {
+        document.getElementById('stats-page').style.display = 'none';
+        document.getElementById('settings-page').style.display = 'block';
+        statsFromSettings = false;
+        settingsActive = true;
+        statsActive = false;
+    } else if (statsFromResults) {
+        document.getElementById('stats-page').style.display = 'none';
+        document.getElementById('results-page').style.display = 'block';
+        statsFromResults = false;
+        statsActive = false;
     }
 }
 
@@ -276,5 +366,14 @@ function showResults() {
     }
     document.getElementById('training-page').style.display = 'none';
     document.getElementById('results-page').style.display = 'block';
-    
+}
+
+function deleteStat(index) {
+    statsPerLP.splice(index, 1);
+    localStorage.setItem('statsPerLP', JSON.stringify(statsPerLP));
+    statsDates.splice(index, 1);
+    localStorage.setItem('statsDates', JSON.stringify(statsDates));
+    statsAccuracy.splice(index, 1);
+    localStorage.setItem('statsAccuracy', JSON.stringify(statsAccuracy));
+    showStats(); 
 }

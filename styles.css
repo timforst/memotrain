@@ -68,7 +68,7 @@ table {
 
 th, td {
   padding: 12px;
-  text-align: left;
+  text-align: center;
   border: 1px solid #ddd;
 }
 
@@ -112,14 +112,46 @@ kbd {
 }
 
 #timeout-button {
-    width: 10vw;
+    width: 15vw;
 }
 
 #darkmode-button {
-    width: 10vw;
+    width: 15vw;
+}
+
+#stats-button {
+    width: 15vw;
+}
+
+.delete-button {
+    background-color: red;
+    border: none;
+    color: white;
+    padding: 8px 12px; 
+    font-size: 16px; 
+    border-radius: 12px; 
+    cursor: pointer; 
+    transition: background-color 0.3s; 
+}
+
+.delete-button:hover {
+    background-color: darkred;
 }
 
 #settings-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 24px;
+    border: none;
+    padding: 20px 20px;
+    background-color: #007BFF;
+    cursor: pointer;
+    /* color: white; */
+    z-index:1000;
+}
+
+#final-stats-button {
     position: absolute;
     top: 20px;
     right: 20px;

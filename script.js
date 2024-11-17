@@ -309,22 +309,24 @@ function showStats(where) {
         deleteButton.classList.add('delete-button');
         deleteButton.addEventListener('click', () => {
             deleteStat(i); 
-            showStats();
         });
         actionCell.appendChild(deleteButton);
         row.appendChild(actionCell);
         statsList.appendChild(row);
     }
-    if (where = "stats") {
+    if (where == "settings") {
         document.getElementById('settings-page').style.display = 'none';
         document.getElementById('stats-page').style.display = 'block';
         statsFromSettings = true;
         settingsActive = false;
         statsActive = true;
-    } else if (where = "results") {
+    } else if (where == "results") {
         document.getElementById('results-page').style.display = 'none';
         document.getElementById('stats-page').style.display = 'block';
         statsFromResults = true;
+        statsActive = true;
+    } else {
+        document.getElementById('stats-page').style.display = 'block';
         statsActive = true;
     }
 }

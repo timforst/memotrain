@@ -290,6 +290,7 @@ function finishTraining() {
 }
 
 function showStats(where) {
+    let avgList = [];
     const statsList = document.getElementById('stats-list').querySelector('tbody');
     statsList.innerHTML = ''; 
     for (let i = statsPerLP.length-1; i > -1; i--) {
@@ -297,6 +298,18 @@ function showStats(where) {
         const timeCell = document.createElement('td');
         timeCell.textContent = statsPerLP[i];
         row.appendChild(timeCell);
+        const avgCell = document.createElement('td');
+        if ( i > 3 ) {
+            let fiveList = statsPerLP.slice(i-4, i+1);
+            let sortedList = fiveList.sort((a, b) => a - b);
+            let threeList = sortedList.slice(1, 4);
+            let avg = threeList.reduce((sum, num) => sum + num, 0) / threeList.length;
+            avgList.push(Math.round(100*avg)/100);
+            avgCell.textContent = Math.round(100*avg)/100;
+        } else {
+            avgCell.textContent = '-';
+        }
+        row.appendChild(avgCell);
         const accuracyCell = document.createElement('td');
         accuracyCell.textContent = statsAccuracy[i] * 100 + '%';
         row.appendChild(accuracyCell);
@@ -314,6 +327,40 @@ function showStats(where) {
         row.appendChild(actionCell);
         statsList.appendChild(row);
     }
+    const pbList = document.getElementById('pb-list').querySelector('tbody');
+    pbList.innerHTML = ' ';
+    const singleRow = document.createElement('tr');
+    const singleTextCell = document.createElement('td');
+    singleTextCell.textContent = 'best single';
+    singleRow.appendChild(singleTextCell);
+    const singleCell = document.createElement('td');
+    singleCell.textContent = Math.min(...statsPerLP);
+    singleRow.appendChild(singleCell);
+    pbList.appendChild(singleRow);
+    const ao5Row = document.createElement('tr');
+    const ao5TextCell = document.createElement('td');
+    ao5TextCell.textContent = 'best Ao5';
+    ao5Row.appendChild(ao5TextCell);
+    const ao5Cell = document.createElement('td');
+    ao5Cell.textContent = Math.min(...avgList);
+    ao5Row.appendChild(ao5Cell);
+    pbList.appendChild(ao5Row);
+    const averageRow = document.createElement('tr');
+    const averageTextCell = document.createElement('td');
+    averageTextCell.textContent = 'overall average';
+    averageRow.appendChild(averageTextCell);
+    const averageCell = document.createElement('td');
+    averageCell.textContent = Math.round((statsPerLP.reduce((sum, num) => sum + num, 0) /statsPerLP.length)*100)/100;
+    averageRow.appendChild(averageCell);
+    pbList.appendChild(averageRow);
+    const accRow = document.createElement('tr');
+    const accTextCell = document.createElement('td');
+    accTextCell.textContent = 'average accuracy';
+    accRow.appendChild(accTextCell);
+    const accCell = document.createElement('td');
+    accCell.textContent = Math.round((statsAccuracy.reduce((sum, num) => sum + num, 0) /statsAccuracy.length)*1000)/10 + '%';
+    accRow.appendChild(accCell);
+    pbList.appendChild(accRow);
     if (where == "settings") {
         document.getElementById('settings-page').style.display = 'none';
         document.getElementById('stats-page').style.display = 'block';

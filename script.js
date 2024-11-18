@@ -297,7 +297,7 @@ function resume() {
 
 
 function finishTraining() {
-    timePerLP = Math.round((times.reduce((sum, num) => sum + num, 0)) / 10 / numberOfPairs)/100;
+    timePerLP = Math.round((times.reduce((sum, num) => sum + num, 0)) * 100 / numberOfPairs)/100;
     updateTimePerLP();
     showResults();
     statsPerLP.push(timePerLP);

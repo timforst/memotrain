@@ -14,6 +14,7 @@ let runningIndex = 0;
 let helpActive = false;
 let settingsActive = false;
 let statsActive = false;
+let pauseActive = false;
 let statsFromSettings = false;
 let statsFromResults = false;
 let currentFirstLetter = 'Z'
@@ -62,8 +63,10 @@ window.addEventListener("load", () => {
 
 document.addEventListener('keydown', event => {
     if (event.code === 'Space') {
-        if (numTotal >= 0 && numTotal < numberOfPairs) {
+        if (numTotal >= 0 && numTotal < numberOfPairs && !pauseActive) {
             good();
+        } else if (pauseActive) {
+            resume();
         }
     }
     if (event.code === 'Enter') {
@@ -72,7 +75,7 @@ document.addEventListener('keydown', event => {
         }
     }
     if (event.code === 'KeyN') {
-        if (numTotal >= 0 && numTotal < numberOfPairs) {
+        if (numTotal >= 0 && numTotal < numberOfPairs && !pauseActive) {
             bad();
         }
     }
@@ -261,14 +264,30 @@ function good() {
 
 function bad() {
     endTime = Date.now();
+    pauseActive = true;
     times.push(Math.round((endTime - startTime)/10) / 100);
-    startTime = Date.now();
-    runningIndex +=2;
     incrementBad();
     goodBad.push(false);
+    document.getElementById('initial-buttons').style.display = 'none';
+    document.getElementById('pause-buttons').style.display = 'flex';
+    document.getElementById('solution').style.display = 'block';
+    document.getElementById("solution-memo").innerHTML = memoP[targets[runningIndex + 1]][targets[runningIndex]];
+}
+
+function resume() {
+    runningIndex +=2;
     if (runningIndex >= 2*numberOfPairs) {
+        pauseActive = false;
+        document.getElementById('initial-buttons').style.display = 'grid';
+        document.getElementById('pause-buttons').style.display = 'none';
+        document.getElementById('solution').style.display = 'none';
         finishTraining();
     } else {
+        pauseActive = false;
+        document.getElementById('initial-buttons').style.display = 'grid';
+        document.getElementById('pause-buttons').style.display = 'none';
+        document.getElementById('solution').style.display = 'none';
+        startTime = Date.now();
         currentFirstLetter = letters[targets[runningIndex]];
         currentSecondLetter = letters[targets[runningIndex+1]];
         letterPairs.push(currentFirstLetter+currentSecondLetter);
@@ -276,8 +295,9 @@ function bad() {
     }
 }
 
+
 function finishTraining() {
-    timePerLP = Math.round((endTime - timeAtStart) / 10 / numberOfPairs)/100;
+    timePerLP = Math.round((times.reduce((sum, num) => sum + num, 0)) / 10 / numberOfPairs)/100;
     updateTimePerLP();
     showResults();
     statsPerLP.push(timePerLP);

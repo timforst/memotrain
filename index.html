@@ -89,7 +89,11 @@
                   </tr>
                   <tr>
                     <td><kbd>N</kbd></td>
-                    <td>Answer Wrong</td>
+                    <td>Answer Wrong and Pause</td>
+                  </tr>
+                  <tr>
+                    <td><kbd>Space</kbd></td>
+                    <td>Resume</td>
                   </tr>
                   <tr>
                     <td><kbd>D</kbd></td>
@@ -126,6 +130,12 @@
             <button onclick="good()">Good</button>
             <button onclick="bad()">Bad</button>
         </div>
+        <div class="letter-pair" id="solution" style="display: none;">
+            <p id="solution-memo"></p>
+        </div>
+        <div class="button-container-resume" id="pause-buttons" style="display: none;">
+            <button onclick="resume()">Resume</button>
+        </div>
     </div>
     <div id="results-page" style=" display: none;">
         <button id="final-stats-button" onclick="showStats('results')">Stats</button>
@@ -140,6 +150,7 @@
     </div>
 
     <script src="script.js"></script>
+    <script src="MemoP.js"></script>
 </body>
 </html>
     

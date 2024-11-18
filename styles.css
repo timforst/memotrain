@@ -51,6 +51,16 @@ li:hover {
     margin: auto;
 }
 
+.button-container-resume {
+    display: flex;
+    justify-content: center;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 600px;
+    padding-top: 10vh;
+    margin: auto;
+}
+
 .help-page {
   max-width: 800px;
   margin: 20px auto;
@@ -204,6 +214,10 @@ h1 {
 
 #letter-pair {
     font-size: 48px;
+}
+
+#solution-memo {
+    font-size: 32px;
 }
 
 #results-list {

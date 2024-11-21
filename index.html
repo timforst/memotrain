@@ -29,8 +29,10 @@
             </li>
             <li>
                 <span>Add Custom Letter Pairs</span>
-                <input type="file" id="fileInput" accept=".csv">
+                <label for="fileInput" class="custom-file-button" id="file-button">Choose File</label>
+                <input type="file" id="fileInput" style=" display: none;" accept=".csv">
                 <button id="upload-button" onclick="processCSV()">Upload</button>
+                <button id="remove-memop-button" style=" display: none;" onclick="removeCSV()">Remove</button>
             </li>
             <li>
                 <span>Stats</span>
@@ -155,7 +157,6 @@
     </div>
 
     <script src="script.js"></script>
-    <script src="MemoP.js"></script>
 </body>
 </html>
     

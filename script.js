@@ -33,6 +33,29 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+document.addEventListener("DOMContentLoaded", function() {
+    const storedData = localStorage.getItem('csvData');
+    if (storedData) {
+        memoP = JSON.parse(storedData);
+        document.getElementById('remove-memop-button').style.display = 'block';
+        document.getElementById('upload-button').style.display = 'none';
+        document.getElementById('file-button').style.display = 'none';
+    }
+});
+
+document.getElementById('fileInput').addEventListener('change', function() {
+    const fileInput = document.getElementById('fileInput');
+    const customFileButton = document.getElementById('file-button');
+
+    if (fileInput.files.length > 0) {
+        customFileButton.textContent = fileInput.files[0].name;
+        customFileButton.style.backgroundColor = '#28A745';  // Change color to indicate success
+    } else {
+        customFileButton.textContent = 'Choose File';  // Reset text if no file is selected
+        customFileButton.style.backgroundColor = '#007BFF'; // Reset color
+    }
+});
+
 window.addEventListener("load", () => {
   const userPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
   
@@ -189,6 +212,9 @@ function processCSV() {
         alert("Please select a CSV file first.");
         return;
     }
+    document.getElementById('remove-memop-button').style.display = 'block';
+    document.getElementById('upload-button').style.display = 'none';
+    document.getElementById('file-button').style.display = 'none';
 
     const reader = new FileReader();
 
@@ -196,6 +222,7 @@ function processCSV() {
         const csvData = event.target.result;
         const listOfLists = parseCSV(csvData);
         memoP = listOfLists;
+        localStorage.setItem('csvData', JSON.stringify(listOfLists));
     };
 
     reader.readAsText(file);
@@ -204,6 +231,19 @@ function processCSV() {
 function parseCSV(data) {
     const rows = data.trim().split("\n");
     return rows.map(row => row.split(","));
+}
+
+function removeCSV() {
+    memoP = [];
+    localStorage.removeItem('csvData');
+    document.getElementById('remove-memop-button').style.display = 'none';
+    document.getElementById('upload-button').style.display = 'block';
+    document.getElementById('file-button').style.display = 'block';
+    const fileInput = document.getElementById('fileInput');
+    fileInput.value = '';
+    const customFileButton = document.getElementById('file-button');
+    customFileButton.textContent = 'Choose File';
+    customFileButton.style.backgroundColor = '#007BFF'; 
 }
 
 function randIndex(list) {

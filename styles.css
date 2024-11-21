@@ -18,6 +18,13 @@ button {
     transition: background-color 0.3s;
 }
 
+file {
+    font-size: 32px;
+    background-color: #007BFF;
+    color: white;
+}
+
+
 ul {
     list-style-type: none; /* Remove default list bullets */
     padding: 0;
@@ -125,7 +132,24 @@ kbd {
     width: 15vw;
 }
 
+.custom-file-button {
+    padding: 20px 10px;
+    font-size: 48px;
+    color: white;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-block;
+    text-align: center;
+}
+
 #upload-button {
+    width: 15vw;
+}
+
+#remove-memop-button {
     width: 15vw;
 }
 

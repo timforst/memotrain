@@ -208,7 +208,8 @@ function startTraining() {
     numGood = 0;
     numTotal = 0;
     goodBad = [];
-    times = []
+    times = [];
+    letterPairs = [];
     document.getElementById('start-page').style.display = 'none';
     document.getElementById('training-page').style.display = 'block';
     currentFirstLetter = letters[targets[runningIndex]];

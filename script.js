@@ -181,6 +181,30 @@ function closeSettings() {
     settingsActive = false;
 }
 
+function processCSV() {
+    const fileInput = document.getElementById('fileInput');
+    const file = fileInput.files[0];
+
+    if (!file) {
+        alert("Please select a CSV file first.");
+        return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = function(event) {
+        const csvData = event.target.result;
+        const listOfLists = parseCSV(csvData);
+        memoP = listOfLists;
+    };
+
+    reader.readAsText(file);
+}
+
+function parseCSV(data) {
+    const rows = data.trim().split("\n");
+    return rows.map(row => row.split(","));
+}
 
 function randIndex(list) {
     let index = Math.floor(Math.random()*list.length);

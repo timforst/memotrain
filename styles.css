@@ -125,6 +125,10 @@ kbd {
     width: 15vw;
 }
 
+#upload-button {
+    width: 15vw;
+}
+
 #darkmode-button {
     width: 15vw;
 }

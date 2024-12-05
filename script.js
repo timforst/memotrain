@@ -15,6 +15,7 @@ let helpActive = false;
 let settingsActive = false;
 let statsActive = false;
 let pauseActive = false;
+let memoPActive = false;
 let statsFromSettings = false;
 let statsFromResults = false;
 let currentFirstLetter = 'Z'
@@ -40,6 +41,7 @@ document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('remove-memop-button').style.display = 'block';
         document.getElementById('upload-button').style.display = 'none';
         document.getElementById('file-button').style.display = 'none';
+        memoPActive = true;
     }
 });
 
@@ -223,6 +225,7 @@ function processCSV() {
         const listOfLists = parseCSV(csvData);
         memoP = listOfLists;
         localStorage.setItem('csvData', JSON.stringify(listOfLists));
+        memoPActive = true;
     };
 
     reader.readAsText(file);
@@ -336,7 +339,9 @@ function bad() {
     document.getElementById('initial-buttons').style.display = 'none';
     document.getElementById('pause-buttons').style.display = 'flex';
     document.getElementById('solution').style.display = 'block';
-    document.getElementById("solution-memo").innerHTML = memoP[targets[runningIndex + 1]][targets[runningIndex]];
+    if (memoPActive) {
+        document.getElementById("solution-memo").innerHTML = memoP[targets[runningIndex + 1]][targets[runningIndex]];
+    }
 }
 
 function resume() {
@@ -487,8 +492,6 @@ function showResults() {
         const li = document.createElement('li');
         const leftSpan = document.createElement('span');
         leftSpan.textContent = letterPairs[i];
-        const middleSpan = document.createElement('span');
-        middleSpan.textContent = memoP[targets[2*i + 1]][targets[2*i]];
         const rightSpan = document.createElement('span');
         rightSpan.textContent = times[i];
         if (goodBad[i]) {
@@ -497,7 +500,11 @@ function showResults() {
             li.style.backgroundColor = '#FF6666';
         }
         li.appendChild(leftSpan);
-        li.appendChild(middleSpan);
+        if (memoPActive) {
+            const middleSpan = document.createElement('span');
+            middleSpan.textContent = memoP[targets[2*i + 1]][targets[2*i]];
+            li.appendChild(middleSpan);
+        }
         li.appendChild(rightSpan);
         combinedList.appendChild(li);
     }

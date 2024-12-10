@@ -105,15 +105,7 @@ document.addEventListener('keydown', event => {
         }
     }
     if (event.code === 'KeyK') {
-        if (numTotal == numberOfPairs) {
-            goBack();
-        } else if (helpActive) {
-            closeHelp();
-        } else if (settingsActive) {
-            closeSettings();
-        } else if (statsActive) {
-            closeStats();
-        }
+        goBack();
     }
     if (event.code === 'KeyH') {
         if (helpActive) {
@@ -178,6 +170,12 @@ function toggleTimeOut() {
 
 function goBack() {
     document.getElementById('results-page').style.display = 'none';
+    document.getElementById('help-page').style.display = 'none';
+    helpActive = false;
+    document.getElementById('stats-page').style.display = 'none';
+    statsActive = false;
+    document.getElementById('settings-page').style.display = 'none';
+    settingsActive = false;
     document.getElementById('start-page').style.display = 'block';
     numTotal = -1;
 }

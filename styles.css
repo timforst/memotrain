@@ -1,11 +1,12 @@
 body {
     /* background-color: white; */
-    background-color: black;
+    /* background-color: black; */
+    background-color: #282c34;
     color: white;
 }
 body.dark-mode {
-    background-color: #282c34;
-    /* background-color: black; */
+    /* background-color: #282c34; */
+    background-color: black;
     color: white;
 }
 

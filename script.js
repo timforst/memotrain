@@ -145,10 +145,10 @@ function toggleDarkMode() {
     body.classList.toggle("dark-mode");
     if (body.classList.contains("dark-mode")) {
         localStorage.setItem("theme", "dark");
-        document.getElementById("darkmode-button").textContent = `Dark`;
+        document.getElementById("darkmode-button").textContent = `Black`;
     } else {
         localStorage.setItem("theme", "light");
-        document.getElementById("darkmode-button").textContent = `Black`;
+        document.getElementById("darkmode-button").textContent = `Dark`;
     }
 }
 

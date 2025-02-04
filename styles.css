@@ -135,6 +135,10 @@ kbd {
     width: 15vw;
 }
 
+#reset-button {
+    width: 15vw;
+}
+
 .custom-file-button {
     padding: 20px 10px;
     font-size: 48px;

@@ -24,6 +24,7 @@ const memoPairs = [];
 let statsPerLP = [];
 let statsDates = [];
 let statsAccuracy = [];
+let uniqueLPList = [];
 const letters = ['A', 'B', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'];
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -31,6 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
         statsPerLP = JSON.parse(localStorage.getItem('statsPerLP'));
         statsDates = JSON.parse(localStorage.getItem('statsDates'));
         statsAccuracy = JSON.parse(localStorage.getItem('statsAccuracy'));
+    }
+    if (localStorage.getItem('uniqueLPList')) {
+        uniqueLPList = JSON.parse(localStorage.getItem('uniqueLPList'));
+        document.getElementById("reset-button").textContent = uniqueLPList.length+'/506';
     }
 });
 
@@ -152,6 +157,12 @@ function toggleDarkMode() {
     }
 }
 
+function resetUniqueLPList() {
+    uniqueLPList = createUniqueLP();
+    document.getElementById("reset-button").textContent = uniqueLPList.length+'/506';
+    localStorage.setItem('uniqueLPList', JSON.stringify(uniqueLPList));
+}
+
 function toggleTimeOut() {
     if (timeOut == 0) {
         timeOut = 3;
@@ -166,6 +177,20 @@ function toggleTimeOut() {
         timeOut = 0;
         document.getElementById("timeout-button").textContent = `Off`;
     }
+}
+
+const shuffle = (array) => array.sort(() => Math.random() - 0.5);
+
+function createUniqueLP() {
+    const unshuffledLP = [];
+    for (let i = 0; i < 23; i++) {
+        for (let j = 0; j < 23; j++) {
+            if (i != j) {
+                unshuffledLP.push(letters[i]+letters[j]);
+            }
+        }
+    }
+    return shuffle(unshuffledLP);
 }
 
 function goBack() {
@@ -275,15 +300,17 @@ function startTraining() {
     goodBad = [];
     times = [];
     letterPairs = [];
+    if (uniqueLPList.length < numberOfPairs) {
+        uniqueLPList = createUniqueLP();
+    }
+    for (let i = 0; i < numberOfPairs; i++) {
+        letterPairs.push(uniqueLPList[i]);
+    }
     document.getElementById('start-page').style.display = 'none';
     document.getElementById('training-page').style.display = 'block';
-    currentFirstLetter = letters[targets[runningIndex]];
-    currentSecondLetter = letters[targets[runningIndex+1]];
-    letterPairs.push(currentFirstLetter+currentSecondLetter);
-    document.getElementById("letter-pair").innerHTML = currentFirstLetter+currentSecondLetter;
+    document.getElementById("letter-pair").innerHTML = letterPairs[runningIndex];
     startTime = Date.now();
     timeAtStart = Date.now();
-
 }
 
 function updateResults() {
@@ -310,7 +337,7 @@ function good() {
     currentTime = Math.round((endTime - startTime)/10) / 100
     times.push(currentTime);
     startTime = Date.now();
-    runningIndex +=2;
+    runningIndex +=1;
     if (timeOut != 0 && currentTime > timeOut) {
         incrementBad();
         goodBad.push(false)
@@ -318,13 +345,10 @@ function good() {
         incrementGood();
         goodBad.push(true);
     }
-    if (runningIndex >= 2*numberOfPairs) {
+    if (runningIndex >= numberOfPairs) {
         finishTraining();
     } else {
-        currentFirstLetter = letters[targets[runningIndex]];
-        currentSecondLetter = letters[targets[runningIndex+1]];
-        letterPairs.push(currentFirstLetter+currentSecondLetter);
-        document.getElementById("letter-pair").innerHTML = currentFirstLetter+currentSecondLetter;
+        document.getElementById("letter-pair").innerHTML = letterPairs[runningIndex];
     }
 }
 
@@ -338,13 +362,13 @@ function bad() {
     document.getElementById('pause-buttons').style.display = 'flex';
     document.getElementById('solution').style.display = 'block';
     if (memoPActive) {
-        document.getElementById("solution-memo").innerHTML = memoP[targets[runningIndex + 1]][targets[runningIndex]];
+        document.getElementById("solution-memo").innerHTML = memoP[letters.indexOf(letterPairs[runningIndex][1])][letters.indexOf(letterPairs[runningIndex][0])];
     }
 }
 
 function resume() {
-    runningIndex +=2;
-    if (runningIndex >= 2*numberOfPairs) {
+    runningIndex +=1;
+    if (runningIndex >= numberOfPairs) {
         pauseActive = false;
         document.getElementById('initial-buttons').style.display = 'grid';
         document.getElementById('pause-buttons').style.display = 'none';
@@ -356,16 +380,15 @@ function resume() {
         document.getElementById('pause-buttons').style.display = 'none';
         document.getElementById('solution').style.display = 'none';
         startTime = Date.now();
-        currentFirstLetter = letters[targets[runningIndex]];
-        currentSecondLetter = letters[targets[runningIndex+1]];
-        letterPairs.push(currentFirstLetter+currentSecondLetter);
-        document.getElementById("letter-pair").innerHTML = currentFirstLetter+currentSecondLetter;
+        document.getElementById("letter-pair").innerHTML = letterPairs[runningIndex];
     }
 }
 
 
 function finishTraining() {
     timePerLP = Math.round((times.reduce((sum, num) => sum + num, 0)) * 100 / numberOfPairs)/100;
+    uniqueLPList.splice(0, 23);
+    document.getElementById("reset-button").textContent = uniqueLPList.length+'/506';
     updateTimePerLP();
     showResults();
     statsPerLP.push(timePerLP);
@@ -375,6 +398,7 @@ function finishTraining() {
     localStorage.setItem('statsPerLP', JSON.stringify(statsPerLP));
     localStorage.setItem('statsDates', JSON.stringify(statsDates));
     localStorage.setItem('statsAccuracy', JSON.stringify(statsAccuracy));
+    localStorage.setItem('uniqueLPList', JSON.stringify(uniqueLPList));
 }
 
 function showStats(where) {
@@ -501,6 +525,7 @@ function showResults() {
         if (memoPActive) {
             const middleSpan = document.createElement('span');
             middleSpan.textContent = memoP[targets[2*i + 1]][targets[2*i]];
+            middleSpan.textContent = memoP[letters.indexOf(letterPairs[i][1])][letters.indexOf(letterPairs[i][0])];
             li.appendChild(middleSpan);
         }
         li.appendChild(rightSpan);
